@@ -35,6 +35,8 @@ const schema = z.object({
   role: z.enum(["student", "alumni", "admin"]).optional().or(z.literal("")),
 });
 
+type SignUpFormValues = z.infer<typeof schema>;
+
 export default function SignUpPage() {
   const form = useForm({
     resolver: zodResolver(schema),
@@ -50,7 +52,7 @@ export default function SignUpPage() {
   const [error, setError] = useState("");
   const router = useRouter();
 
-  const onSubmit = async (values: any) => {
+  const onSubmit = async (values: SignUpFormValues) => {
     setLoading(true);
     setError("");
 

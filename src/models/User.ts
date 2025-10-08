@@ -1,5 +1,5 @@
 import mongoose, { Schema, Document } from "mongoose";
-import { required } from "zod/v4-mini";
+// import { required } from "zod/v4-mini";
 
 export interface IUser extends Document {
   username: string;

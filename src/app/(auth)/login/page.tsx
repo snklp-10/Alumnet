@@ -19,13 +19,6 @@ import {
 import { useRouter } from "next/navigation";
 import Loader from "@/components/global/loader";
 import Link from "next/link";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 
 // ✅ Define form validation schema
 const schema = z.object({
@@ -33,6 +26,8 @@ const schema = z.object({
   email: z.string().email("Invalid email"),
   password: z.string().min(6, "Password must be at least 6 characters"),
 });
+
+type LoginFormValues = z.infer<typeof schema>;
 
 export default function LoginPage() {
   const form = useForm({
@@ -44,7 +39,7 @@ export default function LoginPage() {
   const [error, setError] = useState("");
   const router = useRouter();
 
-  const onSubmit = async (values: any) => {
+  const onSubmit = async (values: LoginFormValues) => {
     setLoading(true);
     setError("");
 
