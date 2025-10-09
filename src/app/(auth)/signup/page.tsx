@@ -63,7 +63,7 @@ export default function SignUpPage() {
       setError(response.error);
       form.reset();
     } else {
-      router.push("/login"); // Redirect to login page after signup
+      router.push("/user"); // Redirect to login page after signup
     }
   };
 
