@@ -1,5 +1,5 @@
 "use server";
-import { FormSchema } from "../validations/schemas";
+import { FormSchema, signUpSchema } from "../validations/schemas";
 import bcrypt from "bcryptjs";
 import dbConnect from "../dbConfig/db";
 import UserModel from "@/models/User";
@@ -35,7 +35,8 @@ export async function actionSignUpUser({
   username,
   email,
   password,
-}: z.infer<typeof FormSchema>) {
+  role,
+}: z.infer<typeof signUpSchema>) {
   await dbConnect();
 
   const existingUser = await UserModel.findOne({ email });
@@ -47,7 +48,7 @@ export async function actionSignUpUser({
     username,
     email,
     password: hashedPassword,
-    role: "student", // default role
+    role: role, // default role
     createdAt: new Date(),
   });
 

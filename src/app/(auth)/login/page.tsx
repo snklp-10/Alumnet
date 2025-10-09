@@ -19,6 +19,8 @@ import {
 import { useRouter } from "next/navigation";
 import Loader from "@/components/global/loader";
 import Link from "next/link";
+import Image from "next/image";
+import Logo from "../../../../public/Alumnet_logo.png";
 
 // ✅ Define form validation schema
 const schema = z.object({
@@ -61,7 +63,12 @@ export default function LoginPage() {
           className="space-y-4 rounded-xl"
         >
           {/* App Logo / Title */}
-          <Link href="/" className="w-full flex justify-center items-center">
+
+          <Link
+            href="/"
+            className="w-full flex justify-center items-center space-x-2"
+          >
+            <Image src={Logo} alt="Alumnet Logo" width={40} height={40} />
             <span className="font-bold dark:text-white text-4xl text-center">
               Alumnet
             </span>

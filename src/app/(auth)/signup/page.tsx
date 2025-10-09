@@ -26,13 +26,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import Image from "next/image";
+import Logo from "../../../../public/Alumnet_logo.png";
 
 // Signup validation schema
 const schema = z.object({
   username: z.string().min(3, "Username must be at least 3 characters"),
   email: z.string().email("Invalid email"),
   password: z.string().min(6, "Password must be at least 6 characters"),
-  role: z.enum(["student", "alumni", "admin"]).optional().or(z.literal("")),
+  role: z
+    .enum(["student", "alumni", "admin"])
+    .optional()
+    .or(z.literal("student")),
 });
 
 type SignUpFormValues = z.infer<typeof schema>;
@@ -75,7 +80,11 @@ export default function SignUpPage() {
           className="space-y-4 p-8 rounded-xl"
         >
           {/* App Logo / Title */}
-          <Link href="/" className="w-full flex justify-center items-center">
+          <Link
+            href="/"
+            className="w-full flex justify-center items-center space-x-2"
+          >
+            <Image src={Logo} alt="Alumnet Logo" width={40} height={40} />
             <span className="font-bold dark:text-white text-4xl text-center">
               Alumnet
             </span>

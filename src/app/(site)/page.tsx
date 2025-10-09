@@ -9,8 +9,8 @@ const HomePage = () => {
       {/* Left Section (Image) */}
       <div className="hidden md:flex items-center justify-center bg-[#7FB069]">
         {/* Replace with your image */}
-        <div className="w-full">
-          <Image src={AlumniImage} alt="Bg image" objectFit="fill" />
+        <div className="w-full flex items-center justify-center ">
+          <Image src={AlumniImage} alt="Bg image" className="object-fill" />
         </div>
       </div>
 
