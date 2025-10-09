@@ -51,7 +51,8 @@ export default function LoginPage() {
       setError(response.error);
       setLoading(false);
     } else {
-      router.push("/home");
+      localStorage.setItem("user", JSON.stringify(response.user));
+      router.push("/home"); // navigate to welcome page
     }
   };
 
