@@ -64,12 +64,21 @@ export default function SignUpPage() {
     const response = await actionSignUpUser(values);
     setLoading(false);
 
-    if (response.error) {
-      setError(response.error);
-      form.reset();
+   if (response.error) {
+    setError(response.error);
+    form.reset();
+  } else {
+    const user = response.user;
+
+    // Check if user needs profile setup
+    if (!user?.bio && !user?.profileImage) {
+      // Redirect to setup page for new users
+      router.push(`/register?userId=${user?.id}`);
     } else {
-      router.push("/user"); // Redirect to login page after signup
+      // Redirect existing users to dashboard
+      router.push("/dashboard");
     }
+  }
   };
 
   return (
