@@ -52,7 +52,7 @@ export default function LoginPage() {
       setLoading(false);
     } else {
       localStorage.setItem("user", JSON.stringify(response.user));
-      router.push("/home"); // navigate to welcome page
+      router.push("/dashboard"); // navigate to welcome page
     }
   };
 
@@ -84,7 +84,7 @@ export default function LoginPage() {
             name="username"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Username</FormLabel>
+                <FormLabel className="text-white">Username</FormLabel>
                 <FormControl>
                   <Input
                     type="text"
@@ -103,7 +103,7 @@ export default function LoginPage() {
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Email</FormLabel>
+                <FormLabel className="text-white">Email</FormLabel>
                 <FormControl>
                   <Input
                     type="email"
@@ -122,7 +122,7 @@ export default function LoginPage() {
             name="password"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Password</FormLabel>
+                <FormLabel className="text-white">Password</FormLabel>
                 <FormControl>
                   <Input
                     type="password"

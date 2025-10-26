@@ -9,8 +9,8 @@ export default function AuthPage() {
   const [showLogin, setShowLogin] = useState(false);
 
   return (
-    <div className="min-h-screen flex justify-center items-center ">
-      <div className="w-full max-w-md">
+    <div className="min-h-screen flex justify-center items-center  ">
+      <div className="w-full max-w-md ">
         {/* Toggle Buttons */}
         <div className="flex justify-center mb-4 space-x-3">
           <Button
@@ -26,7 +26,7 @@ export default function AuthPage() {
           <Button
             className={`px-4 py-2 rounded-r-lg ${
               !showLogin
-                ? "bg-primary text-[#B9F18C]"
+                ? " text-[#B9F18C]"
                 : "bg-[#C2F970] text-black hover:text-white"
             }`}
             onClick={() => setShowLogin(false)}
@@ -36,7 +36,7 @@ export default function AuthPage() {
         </div>
 
         {/* Render Forms */}
-        <div className="border rounded-xl bg-white/60 ">
+        <div className="bg-secondary/70 rounded-xl ">
           {showLogin ? <LoginPage /> : <SignUpPage />}
         </div>
       </div>

@@ -7,7 +7,7 @@ const HomePage = () => {
   return (
     <div className="min-h-screen grid grid-cols-1 md:grid-cols-2">
       {/* Left Section (Image) */}
-      <div className="hidden md:flex items-center justify-center bg-[#7FB069]">
+      <div className="hidden md:flex items-center justify-center ">
         {/* Replace with your image */}
         <div className="w-full flex items-center justify-center ">
           <Image src={AlumniImage} alt="Bg image" className="object-fill" />
@@ -15,8 +15,8 @@ const HomePage = () => {
       </div>
 
       {/* Right Section (Login/Signup) */}
-      <div className="flex items-center justify-center bg-[#FFFBBD] p-6 sm:p-10">
-        <div className="">
+      <div className="flex items-center justify-center  p-6 sm:p-10">
+        <div>
           <div>
             <AuthPage />
           </div>

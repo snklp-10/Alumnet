@@ -9,6 +9,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
   Card,
   CardContent,
   CardDescription,
@@ -24,7 +31,19 @@ const UserSetup: React.FC = () => {
   const [user, setUser] = useState<IUser | null>(null);
   const [loading, setLoading] = useState(false);
 
-  // Initialize formData safely
+  // Generate year options from 1980 to current year + 4
+  const generateYearOptions = () => {
+    const currentYear = new Date().getFullYear();
+    const years = [];
+    for (let year = currentYear + 4; year >= 1980; year--) {
+      years.push(year);
+    }
+    return years;
+  };
+
+  const yearOptions = generateYearOptions();
+
+  // Initialize formData safely (0 = empty/unset for numeric fields)
   const [formData, setFormData] = useState({
     bio: "",
     profileImage: "",
@@ -92,7 +111,9 @@ const UserSetup: React.FC = () => {
       const dataToSend: Record<string, any> = {};
       Object.entries(formData).forEach(([key, value]) => {
         if (value !== "") {
-          if (["graduation_year", "enrollment_year", "current_year"].includes(key)) {
+          if (
+            ["graduation_year", "enrollment_year", "current_year"].includes(key)
+          ) {
             dataToSend[key] = parseInt(value as string, 10);
           } else {
             dataToSend[key] = value;
@@ -141,12 +162,12 @@ const UserSetup: React.FC = () => {
   if (!user) return <p className="text-center mt-20">Loading...</p>; // show loader until user is ready
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-teal-50 py-12 px-4">
-      <div className="max-w-2xl mx-auto">
-        <Card className="shadow-xl border-0">
+    <div className="min-h-screen py-12 px-4 flex items-center justify-center">
+      <div className="w-1/3 mx-auto">
+        <Card className="bg-white/80 shadow-xl border-0">
           <CardHeader>
             <CardTitle className="text-3xl text-center">
-              Complete Your Profile
+              Hi {user.username}, Complete Your Profile
             </CardTitle>
             <CardDescription className="text-center">
               Tell us more about yourself to get started
@@ -160,7 +181,7 @@ const UserSetup: React.FC = () => {
                   <img
                     src={formData.profileImage}
                     alt="Profile preview"
-                    className="w-24 h-24 rounded-full object-cover border-4 border-blue-200"
+                    className="w-28 h-28 rounded-full object-cover border-4 border-blue-200"
                   />
                 )}
                 <div className="w-full">
@@ -195,18 +216,30 @@ const UserSetup: React.FC = () => {
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <Label htmlFor="graduation-year">Graduation Year</Label>
-                      <Input
-                        id="graduation-year"
-                        type="number"
-                        placeholder="2020"
-                        value={formData.graduation_year}
-                        onChange={(e) =>
+                      <Select
+                        value={
+                          formData.graduation_year
+                            ? formData.graduation_year.toString()
+                            : undefined
+                        }
+                        onValueChange={(value) =>
                           setFormData({
                             ...formData,
-                            graduation_year: e.target.valueAsNumber,
+                            graduation_year: parseInt(value, 10),
                           })
                         }
-                      />
+                      >
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Select year" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {yearOptions.map((year) => (
+                            <SelectItem key={year} value={year.toString()}>
+                              {year}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
                     </div>
                     <div>
                       <Label htmlFor="degree">Degree</Label>
@@ -245,7 +278,10 @@ const UserSetup: React.FC = () => {
                         placeholder="Software Engineer"
                         value={formData.job_title}
                         onChange={(e) =>
-                          setFormData({ ...formData, job_title: e.target.value })
+                          setFormData({
+                            ...formData,
+                            job_title: e.target.value,
+                          })
                         }
                       />
                     </div>
@@ -259,33 +295,57 @@ const UserSetup: React.FC = () => {
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <Label htmlFor="enrollment-year">Enrollment Year</Label>
-                      <Input
-                        id="enrollment-year"
-                        type="number"
-                        placeholder="2022"
-                        value={formData.enrollment_year}
-                        onChange={(e) =>
+                      <Select
+                        value={
+                          formData.enrollment_year
+                            ? formData.enrollment_year.toString()
+                            : undefined
+                        }
+                        onValueChange={(value) =>
                           setFormData({
                             ...formData,
-                            enrollment_year: e.target.valueAsNumber,
+                            enrollment_year: parseInt(value, 10),
                           })
                         }
-                      />
+                      >
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Select year" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {yearOptions.map((year) => (
+                            <SelectItem key={year} value={year.toString()}>
+                              {year}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
                     </div>
                     <div>
                       <Label htmlFor="current-year">Current Year</Label>
-                      <Input
-                        id="current-year"
-                        type="number"
-                        placeholder="2"
-                        value={formData.current_year}
-                        onChange={(e) =>
+                      <Select
+                        value={
+                          formData.current_year
+                            ? formData.current_year.toString()
+                            : undefined
+                        }
+                        onValueChange={(value) =>
                           setFormData({
                             ...formData,
-                            current_year: e.target.valueAsNumber,
+                            current_year: parseInt(value, 10),
                           })
                         }
-                      />
+                      >
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Select year" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {[1, 2, 3, 4, 5].map((year) => (
+                            <SelectItem key={year} value={year.toString()}>
+                              {year}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
                     </div>
                   </div>
                   <div>
@@ -314,15 +374,15 @@ const UserSetup: React.FC = () => {
               <div className="flex space-x-4">
                 <Button
                   type="button"
-                  variant="outline"
-                  className="flex-1"
+                  variant="secondary"
+                  className="flex-1 bg-[#C2F970] text-black hover:text-white"
                   onClick={handleSkip}
                 >
                   Skip for now
                 </Button>
                 <Button
                   type="submit"
-                  className="flex-1 bg-gradient-to-r from-blue-600 to-teal-500 hover:from-blue-700 hover:to-teal-600"
+                  className="flex-1 text-[#B9F18C]"
                   disabled={loading}
                 >
                   {loading ? "Saving..." : "Complete Setup"}

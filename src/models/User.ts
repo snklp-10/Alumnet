@@ -7,6 +7,8 @@ export interface IUser extends Document {
   role: "student" | "alumni" | "admin"; // restricts possible roles
   profileImage?: string;
   bio?: string;
+  followers?: Array<mongoose.Types.ObjectId | string>;
+  following?: Array<mongoose.Types.ObjectId | string>;
 
   // Alumni fields
   graduation_year?: number;
@@ -85,6 +87,16 @@ const UserSchema: Schema<IUser> = new Schema(
     major: {
       type: String,
       default: "",
+    },
+
+    // Social
+    followers: {
+      type: [{ type: Schema.Types.ObjectId, ref: "User" }],
+      default: [],
+    },
+    following: {
+      type: [{ type: Schema.Types.ObjectId, ref: "User" }],
+      default: [],
     },
 
     createdAt: {

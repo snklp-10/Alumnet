@@ -64,21 +64,21 @@ export default function SignUpPage() {
     const response = await actionSignUpUser(values);
     setLoading(false);
 
-   if (response.error) {
-    setError(response.error);
-    form.reset();
-  } else {
-    const user = response.user;
-
-    // Check if user needs profile setup
-    if (!user?.bio && !user?.profileImage) {
-      // Redirect to setup page for new users
-      router.push(`/register?userId=${user?.id}`);
+    if (response.error) {
+      setError(response.error);
+      form.reset();
     } else {
-      // Redirect existing users to dashboard
-      router.push("/dashboard");
+      const user = response.user;
+
+      // Check if user needs profile setup
+      if (!user?.bio && !user?.profileImage) {
+        // Redirect to setup page for new users
+        router.push(`/register?userId=${user?.id}`);
+      } else {
+        // Redirect existing users to dashboard
+        router.push("/dashboard");
+      }
     }
-  }
   };
 
   return (
@@ -109,7 +109,7 @@ export default function SignUpPage() {
             name="username"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Username</FormLabel>
+                <FormLabel className="text-white">Username</FormLabel>
                 <FormControl>
                   <Input placeholder="Enter your username" {...field} />
                 </FormControl>
@@ -124,7 +124,7 @@ export default function SignUpPage() {
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Email</FormLabel>
+                <FormLabel className="text-white">Email</FormLabel>
                 <FormControl>
                   <Input
                     type="email"
@@ -143,7 +143,7 @@ export default function SignUpPage() {
             name="password"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Password</FormLabel>
+                <FormLabel className="text-white">Password</FormLabel>
                 <FormControl>
                   <Input
                     type="password"
@@ -162,13 +162,13 @@ export default function SignUpPage() {
             name="role"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Select Role</FormLabel>
+                <FormLabel className="text-white">Select Role</FormLabel>
                 <Select
                   onValueChange={field.onChange}
                   defaultValue={field.value}
                 >
                   <FormControl>
-                    <SelectTrigger className="w-full">
+                    <SelectTrigger className="w-full text-white">
                       <SelectValue placeholder="Choose your role" />
                     </SelectTrigger>
                   </FormControl>
