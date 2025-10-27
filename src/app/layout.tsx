@@ -27,6 +27,7 @@ export default function RootLayout({
         className={twMerge("bg-background", inter.className)}
       >
         <Header />
+
         {children}
         <Toaster richColors position="top-right" />
       </body>

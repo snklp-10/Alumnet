@@ -90,6 +90,7 @@ export default function LoginPage() {
                     type="text"
                     placeholder="Enter your username"
                     {...field}
+                    className="dark:text-gray-300"
                   />
                 </FormControl>
                 <FormMessage />
@@ -109,6 +110,7 @@ export default function LoginPage() {
                     type="email"
                     placeholder="Enter your email"
                     {...field}
+                    className="dark:text-gray-300"
                   />
                 </FormControl>
                 <FormMessage />
@@ -128,6 +130,7 @@ export default function LoginPage() {
                     type="password"
                     placeholder="Enter your password"
                     {...field}
+                    className="dark:text-gray-300"
                   />
                 </FormControl>
                 <FormMessage />

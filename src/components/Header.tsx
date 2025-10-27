@@ -11,6 +11,7 @@ import logo from "../../public/Alumnet_logo.png";
 const Header: React.FC = () => {
   const [user, setUser] = useState<any | null>(null);
   const router = useRouter();
+  // router.refresh();
 
   useEffect(() => {
     const stored = localStorage.getItem("user");

@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
@@ -159,12 +158,15 @@ const UserSetup: React.FC = () => {
     reader.readAsDataURL(file);
   };
 
-  if (!user) return <p className="text-center mt-20">Loading...</p>; // show loader until user is ready
+  if (!user)
+    return <p className="text-center mt-20 text-white">Loading user...</p>; // show loader until user is ready
+
+  // router.refresh();
 
   return (
-    <div className="min-h-screen py-12 px-4 flex items-center justify-center">
-      <div className="w-1/3 mx-auto">
-        <Card className="bg-white/80 shadow-xl border-0">
+    <div className="min-h-screen md:py-12 md:px-4 flex items-center justify-center">
+      <div className="w-full md:w-[60%] xl:w-1/3 mx-8">
+        <Card className="bg-secondary shadow-xl border-0">
           <CardHeader>
             <CardTitle className="text-3xl text-center">
               Hi {user.username}, Complete Your Profile

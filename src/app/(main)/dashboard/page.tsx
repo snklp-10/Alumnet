@@ -262,7 +262,7 @@ const DashboardPage: React.FC = () => {
             ) : (
               <div className="relative">
                 <div
-                  className="posts-scroll space-y-6 max-h-[40vh] overflow-y-auto pr-2"
+                  className="posts-scroll space-y-6 max-h-[50vh] overflow-y-auto pr-2"
                   data-testid="posts-feed"
                 >
                   {posts.map((post) => (
@@ -293,9 +293,9 @@ const DashboardPage: React.FC = () => {
                   ))}
                 </div>
 
-                <div className="feed-bottom-fade pointer-events-none absolute bottom-0 left-0 right-0 h-12 flex items-end">
+                {/* <div className="feed-bottom-fade pointer-events-none absolute bottom-0 left-0 right-0 h-12 flex items-end">
                   <div className="w-full h-full bg-linear-to-b from-transparent to-[rgba(11,11,15,0.95)] backdrop-blur-sm rounded-b-md" />
-                </div>
+                </div> */}
               </div>
             )}
           </div>
@@ -373,13 +373,13 @@ const DashboardPage: React.FC = () => {
                 <h3 className="font-semibold text-lg mb-4 ">Quick Links</h3>
                 <Separator />
                 <div className="mt-5 space-y-5">
-                  <Link href="/jobs">
+                  <Link href="dashboard/jobs/">
                     <Button variant="ghost" className="w-full justify-start">
                       <Briefcase className="w-4 h-4 mr-2" />
                       Job Opportunities
                     </Button>
                   </Link>
-                  <Link href="/events">
+                  <Link href="dashboard/events/">
                     <Button variant="ghost" className="w-full justify-start">
                       <Users className="w-4 h-4 mr-2" />
                       Upcoming Events

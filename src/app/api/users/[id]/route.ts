@@ -2,12 +2,10 @@ import { getUserInfo, updateUserInfo } from "@/lib/server-action/auth-action";
 import { NextRequest, NextResponse } from "next/server";
 
 // GET /api/users/[id]
-export async function GET(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function GET(request: NextRequest, { params }: { params: any }) {
   try {
-    const id = params.id; // no await needed for GET
+    // Next.js may provide a promise-like params object in route handlers — await it before using
+    const { id } = await params;
     const result = await getUserInfo(id);
 
     if ("error" in result) {
@@ -16,18 +14,22 @@ export async function GET(
 
     return NextResponse.json(result);
   } catch (error) {
-    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 }
+    );
   }
 }
 
 // PATCH /api/users/[id]
-export async function PATCH(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function PATCH(request: NextRequest, { params }: { params: any }) {
   try {
-    const id = params.id; // get the id directly
-    if (!id) return NextResponse.json({ error: "User ID is required" }, { status: 400 });
+    const { id } = await params;
+    if (!id)
+      return NextResponse.json(
+        { error: "User ID is required" },
+        { status: 400 }
+      );
 
     const body = await request.json();
     const result = await updateUserInfo(id, body);
@@ -38,6 +40,9 @@ export async function PATCH(
 
     return NextResponse.json(result);
   } catch (error) {
-    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 }
+    );
   }
 }
