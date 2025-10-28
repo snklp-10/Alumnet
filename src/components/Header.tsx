@@ -15,6 +15,7 @@ const Header: React.FC = () => {
 
   useEffect(() => {
     const stored = localStorage.getItem("user");
+    // console.log(stored);
     if (stored) setUser(JSON.parse(stored));
   }, []);
 
@@ -41,7 +42,7 @@ const Header: React.FC = () => {
         {/* User Section */}
         <div className="flex items-center space-x-4">
           {/* Profile image or initial */}
-          {user?.profileImage ? (
+          {user.profileImage ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
               src={user.profileImage}

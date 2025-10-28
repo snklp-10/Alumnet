@@ -11,7 +11,7 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card";
-import { Users, UserPlus, Briefcase } from "lucide-react";
+import { Users, UserPlus, Briefcase, X } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 
 type Post = {
@@ -34,6 +34,8 @@ const DashboardPage: React.FC = () => {
   const [suggestedUsers, setSuggestedUsers] = useState<SuggestedUser[]>([]);
   const [loading, setLoading] = useState(true);
   const [newPost, setNewPost] = useState("");
+  const [userSearch, setUserSearch] = useState("");
+  const [searching, setSearching] = useState(false);
 
   useEffect(() => {
     const storage = localStorage.getItem("user");
@@ -50,7 +52,6 @@ const DashboardPage: React.FC = () => {
       const res = await fetch("/api/feed");
       if (!res.ok) throw new Error("no feed api");
       const data = await res.json();
-      // normalize server shape: support authorName or author
       const mapped = (data || []).map((p: any) => ({
         id: p.id,
         author: p.author || p.authorName || "Unknown",
@@ -59,7 +60,6 @@ const DashboardPage: React.FC = () => {
       }));
       setPosts(mapped);
     } catch (err) {
-      // fallback placeholder posts
       setPosts([
         { id: "1", author: "Alumni Alice", content: "Welcome to Alumnet!" },
         {
@@ -79,13 +79,11 @@ const DashboardPage: React.FC = () => {
       const res = await fetch(`/api/users?exclude=${exclude}&limit=6`);
       if (!res.ok) throw new Error("no users api");
       const users = await res.json();
-      // Defensive client-side filter: remove current user if backend didn't
       const filtered = users.filter(
         (u: any) => String(u.id) !== String(exclude)
       );
       setSuggestedUsers(filtered.slice(0, 5));
     } catch (err) {
-      // fallback placeholder users
       setSuggestedUsers([
         { id: "u1", username: "Jane Doe", role: "alumni" },
         { id: "u2", username: "John Smith", role: "student" },
@@ -93,6 +91,63 @@ const DashboardPage: React.FC = () => {
       ]);
     }
   };
+
+  const searchUsers = async (query: string) => {
+    try {
+      const q = query.trim().toLowerCase();
+      if (!q) {
+        fetchSuggestedUsers();
+        return;
+      }
+
+      setSearching(true);
+      const res = await fetch(
+        `/api/users?search=${encodeURIComponent(query)}&limit=10`
+      );
+      if (!res.ok) throw new Error("no users api");
+      const users = await res.json();
+
+      // 🔥 Filter client-side for matches only
+      const filtered = (users || [])
+        .filter(
+          (u: any) =>
+            String(u.id) !== String(user?.id || user?._id || "") && // exclude self
+            (u.username?.toLowerCase().includes(q) || // match by username
+              u.name?.toLowerCase().includes(q)) // or by name if present
+        )
+        .slice(0, 10);
+
+      setSuggestedUsers(filtered);
+    } catch (err) {
+      toast.error("Failed to search users");
+    } finally {
+      setSearching(false);
+    }
+  };
+
+  // ✅ Simplified clear search — automatically triggers default fetch via effect
+  const clearSearch = () => {
+    setUserSearch("");
+  };
+
+  // ✅ Fixed live debounce + restore suggestions logic
+  useEffect(() => {
+    const q = userSearch.trim();
+
+    if (!q) {
+      const timer = setTimeout(() => {
+        fetchSuggestedUsers();
+      }, 250);
+      return () => clearTimeout(timer);
+    }
+
+    const timer = setTimeout(() => {
+      searchUsers(q);
+    }, 300);
+
+    return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userSearch]);
 
   const handlePostCreated = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -134,7 +189,6 @@ const DashboardPage: React.FC = () => {
   };
 
   const handleFollow = async (id: string) => {
-    // optimistic follow with undo
     const followerId = user?.id || user?._id || null;
     const target = suggestedUsers.find((u) => u.id === id) as
       | SuggestedUser
@@ -151,7 +205,6 @@ const DashboardPage: React.FC = () => {
         return;
       }
 
-      // only remove from suggestions on follow
       if (data.action === "followed") {
         setSuggestedUsers((s) => s.filter((u) => u.id !== id));
 
@@ -162,7 +215,6 @@ const DashboardPage: React.FC = () => {
             label: "Undo",
             onClick: async () => {
               try {
-                // call the same endpoint to toggle (unfollow)
                 const undoRes = await fetch(`/api/users/${id}/follow`, {
                   method: "POST",
                   headers: { "Content-Type": "application/json" },
@@ -173,7 +225,6 @@ const DashboardPage: React.FC = () => {
                   toast.error(undoData?.error || "Failed to undo follow");
                   return;
                 }
-                // restore the suggestion entry
                 if (target) {
                   setSuggestedUsers((s) => [target, ...s]);
                 }
@@ -187,19 +238,18 @@ const DashboardPage: React.FC = () => {
           },
         });
       } else {
-        // if server returned unfollowed
         toast.success("User unfollowed");
       }
     } catch (err) {
-      // fallback behaviour
       toast.error("User follow failed");
     }
   };
 
   return (
-    <div className="min-h-screen bg-[#0B0B0F] text-gray-200 py-24 px-4 transition-colors duration-300">
-      <div className="max-w-7xl mx-auto px-4">
-        <div className="grid lg:grid-cols-3 gap-6">
+    <div className="min-h-screen bg-[rgb(11,11,15)] text-gray-200 py-24 px-4 transition-colors duration-300">
+      <div className="flex w-full min-h-1/2 absolute bottom-0 bg-linear-to-t from-primary/20 px-0 left-0" />
+      <div className="max-w-7xl mx-auto px-4 z-50">
+        <div className="grid lg:grid-cols-3 gap-6 z-50">
           {/* Main Feed */}
           <div className="lg:col-span-2 space-y-6">
             <Card className="bg-linear-to-r from-primary to-background border-r-primary border-l-0 border-y-0">
@@ -262,7 +312,7 @@ const DashboardPage: React.FC = () => {
             ) : (
               <div className="relative">
                 <div
-                  className="posts-scroll space-y-6 max-h-[50vh] overflow-y-auto pr-2"
+                  className="posts-scroll space-y-6 max-h-[50vh] overflow-y-auto pr-2 pb-10"
                   data-testid="posts-feed"
                 >
                   {posts.map((post) => (
@@ -292,22 +342,18 @@ const DashboardPage: React.FC = () => {
                     </Card>
                   ))}
                 </div>
-
-                {/* <div className="feed-bottom-fade pointer-events-none absolute bottom-0 left-0 right-0 h-12 flex items-end">
-                  <div className="w-full h-full bg-linear-to-b from-transparent to-[rgba(11,11,15,0.95)] backdrop-blur-sm rounded-b-md" />
-                </div> */}
               </div>
             )}
           </div>
 
           {/* Sidebar */}
-          <div className="space-y-6">
+          <div className="space-y-6 z-50">
             {/* Suggested Users */}
             <Card
               className="border-0 shadow-lg"
               data-testid="suggested-users-card"
             >
-              <CardContent className="">
+              <CardContent>
                 <div className="flex flex-col items-center justify-center mb-4 gap-4">
                   <div className="flex items-center justify-between w-full ">
                     <h3 className="font-semibold text-lg text-start">
@@ -316,7 +362,34 @@ const DashboardPage: React.FC = () => {
                     <UserPlus className="w-5 h-5 text-gray-400" />
                   </div>
                   <Separator />
+                  <div className="w-full mt-3">
+                    <div className="flex items-center gap-2">
+                      <input
+                        className="flex-1 rounded-md p-2 bg-[#0b0b0f] border border-white/10 text-sm"
+                        placeholder="Search users"
+                        value={userSearch}
+                        onChange={(e) => setUserSearch(e.target.value)}
+                        aria-label="Search users"
+                      />
+                      <Button
+                        type="button"
+                        onClick={clearSearch}
+                        variant="outline"
+                        aria-label="Clear search"
+                        className="p-2"
+                      >
+                        <X className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  </div>
                 </div>
+
+                {searching && (
+                  <p className="text-xs text-gray-500 text-center py-2">
+                    Searching...
+                  </p>
+                )}
+
                 {suggestedUsers.length === 0 ? (
                   <p className="text-sm text-gray-500 text-center py-4">
                     No suggestions available
@@ -368,8 +441,8 @@ const DashboardPage: React.FC = () => {
             </Card>
 
             {/* Quick Links */}
-            <Card className="border border-white/10 bg-[#1a1a1e] shadow-lg hover:border-blue-600/40 transition">
-              <CardContent className="">
+            <Card className="border border-white/10 bg-[#1a1a1e] shadow-lg hover:border-blue-600/40 transition z-100">
+              <CardContent>
                 <h3 className="font-semibold text-lg mb-4 ">Quick Links</h3>
                 <Separator />
                 <div className="mt-5 space-y-5">

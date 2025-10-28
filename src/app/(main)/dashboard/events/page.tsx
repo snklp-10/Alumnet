@@ -184,10 +184,11 @@ export default function EventsPage() {
   }
 
   return (
-    <div className="min-h-screen py-8 mt-14">
-      <div className="max-w-7xl mx-auto px-4">
-        <div className="grid lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2 space-y-6">
+    <div className="min-h-screen py-8 mt-14 ">
+      <div className="flex w-full min-h-1/2 absolute bottom-0 bg-linear-to-t from-primary/20 px-0 left-0" />
+      <div className="max-w-7xl mx-auto px-4 z-100">
+        <div className="grid lg:grid-cols-3 gap-6 z-50">
+          <div className="lg:col-span-2 space-y-6 z-50 pb-10 mb-10">
             <Card className="border-0 shadow-lg">
               <CardContent className="pt-6">
                 <div className="flex items-center justify-between gap-4">
@@ -208,7 +209,7 @@ export default function EventsPage() {
               </CardContent>
             </Card>
 
-            <div className="space-y-4 pr-2 border posts-scroll max-h-[calc(100vh-12rem)] overflow-y-auto">
+            <div className="space-y-4 pr-2 mb-20 posts-scroll max-h-[73vh] overflow-y-auto z-100">
               {filtered.map((ev) => (
                 <Card key={ev.id} className="border-0 shadow">
                   <CardContent>

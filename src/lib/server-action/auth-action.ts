@@ -26,6 +26,7 @@ export async function actionLoginUser({
       email: user.email,
       username: user.username,
       role: user.role,
+      profileImage: user.profileImage,
     },
   };
 }
@@ -92,7 +93,7 @@ export async function getUserInfo(userId: string) {
   try {
     await dbConnect();
     const user = await UserModel.findById(userId).select("-password"); // Exclude password
-    
+
     if (!user) {
       return { error: "User not found" };
     }
@@ -113,7 +114,7 @@ export async function getUserInfo(userId: string) {
         enrollment_year: user.enrollment_year,
         current_year: user.current_year,
         major: user.major,
-      }
+      },
     };
   } catch (error) {
     return { error: "Failed to fetch user" };
@@ -139,12 +140,12 @@ export async function updateUserInfo(
 ) {
   try {
     await dbConnect();
-    
+
     // Check if email is being updated and if it's already taken
     if (updateData.email) {
-      const existingUser = await UserModel.findOne({ 
+      const existingUser = await UserModel.findOne({
         email: updateData.email,
-        _id: { $ne: userId } // exclude current user
+        _id: { $ne: userId }, // exclude current user
       });
       if (existingUser) {
         return { error: "Email already in use" };
@@ -177,7 +178,7 @@ export async function updateUserInfo(
         enrollment_year: updatedUser.enrollment_year,
         current_year: updatedUser.current_year,
         major: updatedUser.major,
-      }
+      },
     };
   } catch (error) {
     return { error: "Failed to update user" };
